@@ -1,0 +1,47 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+compatible = "ti,beaglebone", "ti,beaglebone-black";
+
+/* identification */
+part-number = "BB-BONE-PRU";
+version = "00A0";
+/*Pins used in the project*/
+exclusive-use =
+"P9.27","P9.28";
+
+/*Configure pins on the Beaglebone Black*/
+fragment@0 {
+    target = <&am33xx_pinmux>;
+    __overlay__ {
+        mygpio: pinmux_mygpio{
+        pinctrl-single,pins = <
+           0x1a4 0x05
+           0x19c 0x26
+        >;                 /*Pins ussed in the project*/
+    };
+    };
+};
+
+/*Enable GPIO output*/
+fragment@1 {
+    target = <&ocp>;
+    __overlay__ {
+        test_helper: helper {
+        compatible = "bone-pinmux-helper";
+        pinctrl-names = "default";
+        pinctrl-0 = <&mygpio>;
+        status = "okay";
+    };
+    };
+};
+/*Enable PRU-ICSS module*/
+fragment@2{
+    target = <&pruss>;
+    __overlay__ {
+        status = "okay";
+    };
+    };
+};
+  
